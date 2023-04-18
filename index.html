@@ -1,15 +1,31 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <title>特訓九九</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://pixijs.download/v5.3.10/pixi.min.js"></script>
-    
-    <link rel="stylesheet" href="./style.css">
-    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="./style.css" />
 </head>
+
 <body>
+
+    <div class="flex flex-wrap flex-col justify-center items-center h-screen">
+        <button id="start-button" class="bg-red-500 hover:bg-red-700 text-white text-4xl font-bold py-4 px-8 rounded z-40">
+            開始遊戲
+        </button>
+        <div id="score" class="text-white text-4xl font-bold z-40 hidden mb-4">
+            
+        </div>
+        <button id="restart-button" class="bg-red-500 hover:bg-red-700 text-white text-4xl font-bold py-4 px-8 rounded z-40 hidden">
+            再來一次
+        </button>
+        
+    </div>
+    <div id="timer" class="ml-4 text-2xl font-bold fixed text-white top-2 left-2 z-40"></div>
     <script src="./index.js"></script>
 </body>
+
 </html>
