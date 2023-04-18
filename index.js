@@ -98,9 +98,15 @@ class Bullet {
 
 function startGame() {
   isGameStarted = true;
-  startButton.classList.add('hidden');
   startTime = Date.now();
   timerElement = document.getElementById("timer");
+  elapsedTime = 0;
+  timerElement.textContent = "0:000";
+  startButton.classList.add('hidden');
+  restartButton.classList.add('hidden');
+  score.classList.add('hidden');
+  document.addEventListener('touchstart', handleTouchStart, false);
+  document.addEventListener('touchmove', handleTouchMove, false);
   // TODO: 觸發開始事件
 }
 
@@ -109,6 +115,8 @@ function endGame() {
   restartButton.classList.remove('hidden');
   score.innerText = timerElement.textContent;
   score.classList.remove('hidden');
+  document.removeEventListener('touchstart', handleTouchStart, false);
+  document.removeEventListener('touchmove', handleTouchMove, false);
   
   // TODO: 觸發結束事件
 }
@@ -127,12 +135,7 @@ function resetGame() {
   bulletInterval = initialBulletInterval;
   bulletCountdown = bulletInterval;
   // 刪除舞台上的子彈
-  
-  startTime = Date.now();
-  elapsedTime = 0;
-  timerElement.textContent = "0:000";
-  restartButton.classList.add('hidden');
-  score.classList.add('hidden');
+  startGame();
 }
 
 // 檢查兩個元素是否相撞
@@ -148,6 +151,38 @@ function isColliding(a, b) {
          aRect.x < bRect.x + bRect.width &&
          aRect.y + aRect.height > bRect.y &&
          aRect.y < bRect.y + bRect.height;
+}
+
+function handleTouchStart(event) {
+  touchStartX = event.touches[0].clientX;
+  touchStartY = event.touches[0].clientY;
+}
+
+function handleTouchMove(event) {
+  event.preventDefault();
+
+  const touchX = event.touches[0].clientX;
+  const touchY = event.touches[0].clientY;
+
+  // 計算 touch 事件的位移量
+  const deltaX = touchX - touchStartX;
+  const deltaY = touchY - touchStartY;
+
+  // 將位移量轉換為飛機的移動方向和速度
+  const speed = 10;
+  const angle = Math.atan2(deltaY, deltaX);
+  const velocity = {
+    x: speed * Math.cos(angle),
+    y: speed * Math.sin(angle),
+  };
+
+  // 更新飛機的位置
+  airplane.x += velocity.x;
+  airplane.y += velocity.y;
+
+  // 更新 touch 事件的起始位置
+  touchStartX = touchX;
+  touchStartY = touchY;
 }
 
 function createAirplane() {
@@ -222,7 +257,6 @@ const app = new PIXI.Application({
 });
 
 // 將 PixiJS Application 加入 HTML 頁面
-// app.view.setAttribute("id", "gameblock");
 app.view.classList.add('fixed','w-screen','h-screen','inset-0');
 document.body.appendChild(app.view);
 
@@ -251,6 +285,14 @@ function setup() {
       velocity.y += airplaneAcceleration;
     }
   });
+  // 綁定 touch 事件
+  document.addEventListener('touchstart', handleTouchStart, false);
+  document.addEventListener('touchmove', handleTouchMove, false);
+
+  // 記錄 touch 事件的起始位置
+  let touchStartX = 0;
+  let touchStartY = 0;
+
   
   // 開始遊戲循環
   app.ticker.add(() => {
