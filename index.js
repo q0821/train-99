@@ -5,14 +5,13 @@ let elapsedTime = 0;
 let timerElement = null;
 let airplane = null;
 // 加速度及摩擦力
-const airplaneAcceleration = 0.5;
-const airplaneFriction = 0.99;
+let airplaneAcceleration = 0.5;
+let airplaneFriction = 0.99;
 let velocity = { x: 0, y: 0 };
 
-let initialBulletInterval = 3000;
+const initialBulletInterval = 3000;
 let bulletInterval = initialBulletInterval;
 let bulletCountdown = bulletInterval;
-
 
 // 定義 delta
 let delta = 100;
@@ -21,9 +20,15 @@ let bullets = [];
 
 // 監聽開始按鈕事件
 const startButton = document.getElementById('start-button');
-startButton.addEventListener('click', startGame);
+startButton.addEventListener('click', () => {
+  startGame();
+});
+
 const restartButton = document.getElementById("restart-button");
-restartButton.addEventListener("click", resetGame);
+restartButton.addEventListener("click", () => {
+  resetGame();
+});
+
 const score = document.getElementById("score");
 
 
@@ -55,7 +60,7 @@ class Bullet {
     const angle = Math.atan2(airplane.y - y, airplane.x - x);
     this.sprite = new PIXI.Text('弾', {
       fontFamily: 'Arial',
-      fontSize: 18,
+      fontSize: 12,
       fill: 0xeec356,
     });
     this.sprite.anchor.set(0.5, 0.5); // 將 anchor 設定為中心點
